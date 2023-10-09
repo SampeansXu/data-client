@@ -1,0 +1,30 @@
+package com.hqwx.bigdata.client.common.sql.segments;
+
+import com.hqwx.bigdata.client.common.sql.enums.BaseSQLKeyword;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * @Description: HavingSegmentList
+ * @Author: XuShengBin
+ * @Date: 2022-09-07
+ * @Ver: v1.0 -create
+ */
+public class HavingSegmentList extends AbstractISegmentList {
+    public HavingSegmentList() {
+    }
+
+    protected boolean transformList(List<ISqlSegment> list, ISqlSegment firstSegment, ISqlSegment lastSegment) {
+        if (!this.isEmpty()) {
+            this.add(BaseSQLKeyword.AND);
+        }
+
+        list.remove(0);
+        return true;
+    }
+
+    protected String childrenSqlSegment() {
+        return this.isEmpty() ? "" : (String)this.stream().map(ISqlSegment::getSqlSegment).collect(Collectors.joining(" ", " " + BaseSQLKeyword.HAVING.getSqlSegment() + " ", ""));
+    }
+}
